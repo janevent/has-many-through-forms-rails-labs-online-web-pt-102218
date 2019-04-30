@@ -1,1 +1,26 @@
+<% require 'pry' %>
+<h2><%= @post.title %></h2>
+<p><%= @post.content %></h2></p>
+<ul>
+    <% @post.categories.each do |category| %>
+        <%= category.name %>
+    <% end %>
+<ul>
+    <% @post.comments.each do |comment| %>
+       <li> <%= comment.content %></li>
+       
+    <%end%>
+</ul>
+<% @post.users.uniq.each do |user| %>
+    <li><%= link_to user.username, user_path(user)  %></li>
+<%end%>
+</ul>
 
+<%= form_for :comments do |f| %>
+    <%= f.collection_check_boxes(:user_ids, User.all, :id, :username) %> 
+    <%= f.label :user %>
+    <%= f.text_field :user %>
+    <%= f.text_field :content %>
+    
+    
+<%end%>
