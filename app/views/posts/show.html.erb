@@ -5,9 +5,18 @@
     <% @post.categories.each do |category| %>
         <%= category.name %>
     <% end %>
+</ul>
+
+<ul>
+    <% @post.users.each do |user| %>
+        <li> <%= "#{user.username} says: #{user.comments[0].content}" %> </li>
+    <%end%>
+</ul>
+
 <ul>
     <% @post.comments.each do |comment| %>
-       <li> <%= comment.content %></li>
+        
+       <li> <%= " #{comment.user_id} says: #{comment.content}" %></li>
        
     <%end%>
 </ul>
@@ -16,11 +25,18 @@
 <%end%>
 </ul>
 
-<%= form_for :comments do |f| %>
-    <%= f.collection_check_boxes(:user_ids, User.all, :id, :username) %> 
-    <%= f.label :user %>
-    <%= f.text_field :user %>
-    <%= f.text_field :content %>
+<%= form_for @comment do |f| %>
+
+    <%= f.collection_select(:user_id, User.all, :id, :username, include_blank: "") %> 
     
+    <%= f.fields_for :user, User.new do |user_builder|%>
+        <%= user_builder.text_field :username %>
+    <%end%>
+
+    
+    <%= f.hidden_field :post_id, value: @post.id %>
+
+    <%= f.text_field :content %>
+    <%= f.submit %>
     
 <%end%>
